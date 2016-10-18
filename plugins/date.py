@@ -2,5 +2,5 @@ import time
 
 
 def run(conf):
-    fmt = conf['date']['format']
+    fmt = conf['format']
     return time.strftime(fmt)
