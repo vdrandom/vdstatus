@@ -1,7 +1,7 @@
 import time
 
 
-def run(config, section):
+def execute(config, section):
     fmt = config.get(section, 'format')
     result = dict()
     if config.has_option(section, 'color'):

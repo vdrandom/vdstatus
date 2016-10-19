@@ -18,5 +18,5 @@ def run_plugins():
             continue
         plugin_name = '.' + configuration.get(section, 'plugin')
         plugin_module = importlib.import_module(plugin_name, 'plugins')
-        outputs.append(plugin_module.run(configuration, section))
-    print(json.dumps(outputs) + ',')
+        outputs.append(plugin_module.execute(configuration, section))
+    return outputs
