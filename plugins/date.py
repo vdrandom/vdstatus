@@ -1,6 +1,10 @@
 import time
 
 
-def run(conf):
-    fmt = conf['format']
-    return time.strftime(fmt)
+def run(config, section):
+    fmt = config.get(section, 'format')
+    result = dict()
+    if config.has_option(section, 'color'):
+        result['color'] = config.get(section, 'color')
+    result['full_text'] = time.strftime(fmt)
+    return result
