@@ -1,4 +1,8 @@
 #!/usr/bin/python3 -u
+# TODO:
+# * handle SIGINT properly
+# * add documentation / comments
+# * add a dummy plugin to use as a starting point
 from sys import argv
 import argparse
 import configparser
