@@ -11,7 +11,7 @@ class PluginThread(threading.Thread):
         self.status = dict()
         if config.has_option(section, 'color'):
             self.status['color'] = config.get(section, 'color')
-        self.freq = config.get(section, 'freq', fallback=10)
+        self.freq = config.getint(section, 'freq', fallback=10)
 
     def main(self):
         loads = os.getloadavg()
