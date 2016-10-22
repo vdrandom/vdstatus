@@ -6,10 +6,7 @@ import plugins
 import time
 
 
-DEFAULT_CONFIG = os.path.join(os.environ['HOME'], 'IdeaProjects/vdstatus/conf.ini')
-
-configuration = configparser.ConfigParser()
-configuration.read(DEFAULT_CONFIG)
+DEFAULT_CONFIG = os.path.join(os.environ['HOME'], '.config/vdstatus/conf.ini')
 
 
 def load_plugins(config):
@@ -24,7 +21,29 @@ def load_plugins(config):
     return plugins_loaded
 
 
-def run_plugins():
+def format_i3wm(inputs):
+    return json.dumps(inputs) + ','
+
+
+def format_term(inputs):
+    return_info = list()
+    for item in inputs:
+        return_info.append(item['full_text'])
+    return ' \033[1m|\033[0m '.join(return_info)
+
+
+def run_plugins(config_file=DEFAULT_CONFIG):
+    configuration = configparser.ConfigParser()
+    configuration.read(config_file)
+    output_format = configuration.get('main', 'format', fallback='term')
+
+    if output_format == 'i3':
+        print('{"version":1}\n[')
+        format_outputs = format_i3wm
+    # default to terminal output
+    else:
+        format_outputs = format_term
+
     plugins_l = load_plugins(configuration)
     for plugin in plugins_l:
         plugin.start()
@@ -33,5 +52,5 @@ def run_plugins():
         outputs = list()
         for plugin in plugins_l:
             outputs.append(plugin.status)
-        print(json.dumps(outputs) + ',')
+        print(format_outputs(outputs))
         time.sleep(1)

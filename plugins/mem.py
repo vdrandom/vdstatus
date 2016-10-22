@@ -1,19 +1,23 @@
-import time
+import psutil
 import threading
+import time
 
 
 class PluginThread(threading.Thread):
     def __init__(self, section, config, thread_id):
         threading.Thread.__init__(self)
         self.threadID = thread_id
-        self.date_format = config.get(section, 'format', fallback='%c')
         self.status = dict()
         if config.has_option(section, 'color'):
             self.status['color'] = config.get(section, 'color')
         self.freq = 1
 
     def main(self):
-        self.status['full_text'] = time.strftime(self.date_format)
+        mem_stat = psutil.virtual_memory()
+        mem_percentage = round(100.0 - mem_stat.percent, 2)
+        mem_available = round(mem_stat.available / 2**30, 2)
+        mem = 'RAM: ' + str(mem_percentage) + '% (' + str(mem_available) + 'G)'
+        self.status['full_text'] = mem
 
     def run(self):
         while True:
