@@ -12,7 +12,7 @@ class PluginThread(threading.Thread):
         self.status = dict()
         if config.has_option(section, 'color'):
             self.status['color'] = config.get(section, 'color')
-        self.freq = 1
+        self.freq = config.get(section, 'freq', fallback=1)
 
     def main(self):
         with open(BATTERY_DIR + 'capacity', 'r') as capacity, \

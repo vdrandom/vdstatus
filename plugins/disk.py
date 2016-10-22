@@ -8,15 +8,17 @@ class PluginThread(threading.Thread):
         threading.Thread.__init__(self)
         self.threadID = thread_id
         self.status = dict()
+        self.part = config.get(section, 'part')
         if config.has_option(section, 'color'):
             self.status['color'] = config.get(section, 'color')
-        self.freq = config.get(section, 'freq', fallback=1)
+        self.freq = config.getint(section, 'freq', fallback=30)
 
     def main(self):
-        mem_stat = psutil.virtual_memory()
-        mem_available = str(round(mem_stat.available / 2**30, 2))
-        mem = 'RAM: ' + mem_available + 'G'
-        self.status['full_text'] = mem
+        du_stat = psutil.disk_usage(self.part)
+        # du_perc = str(du_stat.percent)
+        du_free = str(round(du_stat.free / 2**30, 2))
+        du = self.part + ': ' + du_free + 'G'
+        self.status['full_text'] = du
 
     def run(self):
         while True:

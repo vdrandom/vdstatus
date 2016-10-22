@@ -10,7 +10,7 @@ class PluginThread(threading.Thread):
         self.status = dict()
         if config.has_option(section, 'color'):
             self.status['color'] = config.get(section, 'color')
-        self.freq = 1
+        self.freq = config.get(section, 'freq', fallback=1)
 
     def main(self):
         self.status['full_text'] = time.strftime(self.date_format)
