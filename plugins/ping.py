@@ -30,7 +30,7 @@ class PluginThread(threading.Thread):
     def main(self):
         random.shuffle(self.hosts)
         for host in self.hosts:
-            fping = 'fping -qct' + self.timeout + ' ' + host + ' &>/dev/null'
+            fping = 'fping -qc1t' + self.timeout + ' ' + host + ' &>/dev/null'
             response = os.system(fping)
             if response == 0:
                 self.format_status('on')
