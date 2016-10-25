@@ -70,7 +70,8 @@ def run_plugins(config_file=DEFAULT_CONFIG):
     while True:
         outputs = list()
         for plugin in plugins_l:
-            outputs.append(plugin.status)
+            if plugin.hide == False:
+                outputs.append(plugin.status)
         print(format_outputs(outputs))
         time.sleep(1)
 

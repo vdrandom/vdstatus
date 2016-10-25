@@ -10,22 +10,19 @@ class PluginThread(threading.Thread):
         self.threadID = thread_id
         self.hosts = config.get(section, 'hosts').split(',')
         self.title = config.get(section, 'title')
-        if config.has_option(section, 'colors'):
-            self.colors = config.get(section, 'colors').split(',')
-        else:
-            self.colors = None
         self.timeout = config.get(section, 'timeout', fallback='150')
         self.status = dict()
         self.freq = config.getint(section, 'freq', fallback=5)
         self.format_status('n/a')
+        self.hide = False
 
     def format_status(self, state):
         self.status['full_text'] = self.title + ': ' + state
-        if self.colors is not None:
-            if state == 'on':
-                self.status['color'] = self.colors[0]
-            else:
-                self.status['color'] = self.colors[1]
+        if state == 'on':
+            self.status['urgent'] = False
+            self.hide = True
+        else:
+            self.status['urgent'] = True
 
     def main(self):
         random.shuffle(self.hosts)

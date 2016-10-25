@@ -12,6 +12,7 @@ class PluginThread(threading.Thread):
         if config.has_option(section, 'color'):
             self.status['color'] = config.get(section, 'color')
         self.freq = config.getint(section, 'freq', fallback=30)
+        self.hide = False
 
     def main(self):
         du_stat = psutil.disk_usage(self.part)

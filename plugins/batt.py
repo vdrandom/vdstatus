@@ -13,6 +13,7 @@ class PluginThread(threading.Thread):
         if config.has_option(section, 'color'):
             self.status['color'] = config.get(section, 'color')
         self.freq = config.getint(section, 'freq', fallback=1)
+        self.hide = False
 
     def main(self):
         with open(BATTERY_DIR + 'capacity', 'r') as capacity, \
@@ -21,8 +22,11 @@ class PluginThread(threading.Thread):
             batt_capacity = capacity.read().strip()
         if batt_stat != 'Discharging':
             batt_stat = '\u2191'
+            if float(batt_capacity) < 15:
+                self.status['urgent'] = True
         else:
             batt_stat = '\u2193'
+
         batt = 'BAT: ' + batt_capacity + '% ' + batt_stat
 
         self.status['full_text'] = batt

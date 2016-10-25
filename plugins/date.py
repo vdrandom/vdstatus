@@ -11,6 +11,7 @@ class PluginThread(threading.Thread):
         if config.has_option(section, 'color'):
             self.status['color'] = config.get(section, 'color')
         self.freq = config.getint(section, 'freq', fallback=1)
+        self.hide = False
 
     def main(self):
         self.status['full_text'] = time.strftime(self.date_format)
