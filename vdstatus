@@ -1,8 +1,8 @@
 #!/usr/bin/python3 -u
-# TODO:
-# * handle SIGINT properly
-# * add documentation / comments
-# * add a dummy plugin to use as a starting point
+# TODO: handle SIGINT properly
+# TODO: add documentation / comments
+# TODO: add a dummy plugin to use as a starting point
+# TODO: interactivity support
 from sys import argv
 import argparse
 import configparser
@@ -70,7 +70,7 @@ def run_plugins(config_file=DEFAULT_CONFIG):
     while True:
         outputs = list()
         for plugin in plugins_l:
-            if plugin.hide == False:
+            if not plugin.hide:
                 outputs.append(plugin.status)
         print(format_outputs(outputs))
         time.sleep(1)
