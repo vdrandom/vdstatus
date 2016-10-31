@@ -1,4 +1,4 @@
-#!/usr/bin/python3 -u
+#!/usr/bin/python3
 # TODO: handle SIGINT properly
 # TODO: add documentation / comments
 # TODO: add a dummy plugin to use as a starting point
@@ -54,7 +54,7 @@ def run_plugins(config_file=DEFAULT_CONFIG):
     output_format = configuration.get('main', 'format', fallback='term')
 
     if output_format == 'i3':
-        print('{"version":1}\n[')
+        print('{"version":1}\n[', flush=True)
         format_outputs = format_i3wm
     # default to terminal output
     else:
@@ -72,7 +72,7 @@ def run_plugins(config_file=DEFAULT_CONFIG):
         for plugin in plugins_l:
             if not plugin.hide:
                 outputs.append(plugin.status)
-        print(format_outputs(outputs))
+        print(format_outputs(outputs), flush=True)
         time.sleep(1)
 
 
