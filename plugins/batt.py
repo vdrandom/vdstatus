@@ -24,8 +24,11 @@ class PluginThread(threading.Thread):
             batt_stat = '\u2191'
             if float(batt_capacity) < 15:
                 self.status['urgent'] = True
+            else:
+                self.status['urgent'] = False
         else:
             batt_stat = '\u2193'
+            self.status['urgent'] = False
 
         batt = 'BAT: ' + batt_capacity + '% ' + batt_stat
 
