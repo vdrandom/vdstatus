@@ -12,6 +12,7 @@ class PluginThread(threading.Thread):
         if config.has_option(section, 'color'):
             self.status['color'] = config.get(section, 'color')
         self.freq = config.getint(section, 'freq', fallback=10)
+        self.hide_ok = config.getboolean(section, 'hide_ok', fallback=False)
         self.hide = False
         self.problem_value = config.getint(section, 'problem', fallback=100)
 
@@ -21,7 +22,7 @@ class PluginThread(threading.Thread):
             self.hide = False
             self.status['urgent'] = True
         else:
-            self.hide = True
+            self.hide = self.hide_ok
             self.status['urgent'] = False
         loads = [str(i) for i in loads]
         self.status['full_text'] = 'LA: ' + ' '.join(loads)
