@@ -21,70 +21,64 @@ def parse_arguments(arguments=sys.argv[1:]):
     desc = ('A simple i3status replacement, '
             'and more. Warning: WIP, may be broken.')
     p = argparse.ArgumentParser(description=desc)
-    p.add_argument('-c', '--config', help='configuration file')
-
+    p.add_argument('-c', '--conf', default=DEFAULT_CONFIG,
+                   help='configuration file')
     return p.parse_args(arguments)
 
 
-def load_plugins(config):
-    plugins_loaded = list()
-    config.remove_section('main')
-    for section in config.sections():
-        plugin_name = config.get(section, 'plugin')
-        plugin_id = len(plugins_loaded)
-        module = importlib.import_module('.' + plugin_name, 'plugins')
-        thread_object = module.PluginThread(section, config, plugin_id)
-        plugins_loaded.append(thread_object)
-    return plugins_loaded
+class PluginRunner:
+    def __init__(self, config_file=DEFAULT_CONFIG):
+        self.config = configparser.ConfigParser()
+        self.config.read(config_file)
+        self.output_format = self.config.get('main', 'format', fallback='term')
+        self.output_freq = self.config.getint('main', 'output_freq', fallback=1)
+        self.plugins_loaded = list()
+        self.config.remove_section('main')
+        self.format_output = self.format_term
+        for section in self.config.sections():
+            plugin_name = self.config.get(section, 'plugin')
+            plugin_id = len(self.plugins_loaded)
+            module = importlib.import_module('.' + plugin_name, 'plugins')
+            thread_object = module.PluginThread(section, self.config, plugin_id)
+            self.plugins_loaded.append(thread_object)
 
+    def start(self):
+        if self.output_format == 'i3':
+            print('{"version":1}\n[', flush=True)
+            self.format_output = self.format_i3wm
+        for plugin in self.plugins_loaded:
+            plugin.start()
 
-def format_i3wm(inputs):
-    return json.dumps(inputs) + ','
-
-
-def format_term(inputs):
-    return_info = list()
-    for item in inputs:
-        return_info.append(item['full_text'])
-    return ' \033[1m|\033[0m '.join(return_info)
-
-
-def run_plugins(config_file=DEFAULT_CONFIG):
-    configuration = configparser.ConfigParser()
-    configuration.read(config_file)
-    output_format = configuration.get('main', 'format', fallback='term')
-
-    if output_format == 'i3':
-        print('{"version":1}\n[', flush=True)
-        format_outputs = format_i3wm
-    # default to terminal output
-    else:
-        format_outputs = format_term
-
-    plugins_l = load_plugins(configuration)
-    for plugin in plugins_l:
-        plugin.start()
-
-    # give plugins some time to fill the outputs
-    time.sleep(0.1)
-
-    while True:
+    def query(self):
         outputs = list()
         try:
-            for plugin in plugins_l:
+            for plugin in self.plugins_loaded:
                 if not plugin.hide:
                     outputs.append(plugin.status)
-            print(format_outputs(outputs), flush=True)
-            time.sleep(1)
+            print(self.format_output(outputs), flush=True)
+            time.sleep(self.output_freq)
         except (KeyboardInterrupt, SystemExit):
-            for plugin in plugins_l:
+            for plugin in self.plugins_loaded:
                 plugin.stop()
             sys.exit('stopping threads...')
+        del outputs
+
+    @staticmethod
+    def format_i3wm(inputs):
+        return json.dumps(inputs) + ','
+
+    @staticmethod
+    def format_term(inputs):
+        return_info = list()
+        for item in inputs:
+            return_info.append(item['full_text'])
+        return ' \033[1m|\033[0m '.join(return_info)
 
 
 if __name__ == '__main__':
     args = parse_arguments()
-    if args.config is not None:
-        run_plugins(args.config)
-    else:
-        run_plugins()
+    plugin_runner = PluginRunner(args.conf)
+    plugin_runner.start()
+    time.sleep(0.1)
+    while True:
+        plugin_runner.query()
