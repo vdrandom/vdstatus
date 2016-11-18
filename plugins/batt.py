@@ -14,6 +14,7 @@ class PluginThread(threading.Thread):
             self.status['color'] = config.get(section, 'color')
         self.freq = config.getint(section, 'freq', fallback=1)
         self.hide = False
+        self.should_stop = False
 
     def main(self):
         with open(BATTERY_DIR + 'capacity', 'r') as capacity, \
@@ -34,7 +35,13 @@ class PluginThread(threading.Thread):
 
         self.status['full_text'] = batt
 
+    def stop(self):
+        self.should_stop = True
+
     def run(self):
         while True:
-            self.main()
-            time.sleep(self.freq)
+            if self.should_stop is False:
+                self.main()
+                time.sleep(self.freq)
+            else:
+                break

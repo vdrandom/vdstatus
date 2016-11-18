@@ -14,6 +14,7 @@ class PluginThread(threading.Thread):
         self.freq = config.getint(section, 'freq', fallback=10)
         self.hide_ok = config.getboolean(section, 'hide_ok', fallback=False)
         self.hide = False
+        self.should_stop = False
         self.problem_value = config.getint(section, 'problem', fallback=100)
 
     def main(self):
@@ -27,7 +28,13 @@ class PluginThread(threading.Thread):
         loads = [str(i) for i in loads]
         self.status['full_text'] = 'LA: ' + ' '.join(loads)
 
+    def stop(self):
+        self.should_stop = True
+
     def run(self):
         while True:
-            self.main()
-            time.sleep(self.freq)
+            if self.should_stop is False:
+                self.main()
+                time.sleep(self.freq)
+            else:
+                break

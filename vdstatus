@@ -1,22 +1,23 @@
 #!/usr/bin/python3
 # TODO: handle SIGINT properly
+# TODO: remove code duplication in plugins, probably use a common class?
 # TODO: add documentation / comments
 # TODO: add a dummy plugin to use as a starting point
 # TODO: interactivity support
-from sys import argv
 import argparse
 import configparser
 import importlib
 import json
 import os
 import plugins
+import sys
 import time
 
 
 DEFAULT_CONFIG = os.path.join(os.environ['HOME'], '.config/vdstatus/conf.ini')
 
 
-def parse_arguments(arguments=argv[1:]):
+def parse_arguments(arguments=sys.argv[1:]):
     desc = ('A simple i3status replacement, '
             'and more. Warning: WIP, may be broken.')
     p = argparse.ArgumentParser(description=desc)
@@ -69,11 +70,16 @@ def run_plugins(config_file=DEFAULT_CONFIG):
 
     while True:
         outputs = list()
-        for plugin in plugins_l:
-            if not plugin.hide:
-                outputs.append(plugin.status)
-        print(format_outputs(outputs), flush=True)
-        time.sleep(1)
+        try:
+            for plugin in plugins_l:
+                if not plugin.hide:
+                    outputs.append(plugin.status)
+            print(format_outputs(outputs), flush=True)
+            time.sleep(1)
+        except (KeyboardInterrupt, SystemExit):
+            for plugin in plugins_l:
+                plugin.stop()
+            sys.exit('stopping threads...')
 
 
 if __name__ == '__main__':

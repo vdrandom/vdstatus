@@ -13,6 +13,7 @@ class PluginThread(threading.Thread):
             self.status['color'] = config.get(section, 'color')
         self.freq = config.getint(section, 'freq', fallback=30)
         self.hide = False
+        self.should_stop = False
         self.problem_value = config.getint(section, 'problem', fallback=70)
 
     def main(self):
@@ -27,7 +28,13 @@ class PluginThread(threading.Thread):
         du = self.part + ': ' + du_free + 'G'
         self.status['full_text'] = du
 
+    def stop(self):
+        self.should_stop = True
+
     def run(self):
         while True:
-            self.main()
-            time.sleep(self.freq)
+            if self.should_stop is False:
+                self.main()
+                time.sleep(self.freq)
+            else:
+                break

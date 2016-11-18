@@ -12,11 +12,18 @@ class PluginThread(threading.Thread):
             self.status['color'] = config.get(section, 'color')
         self.freq = config.getint(section, 'freq', fallback=1)
         self.hide = False
+        self.should_stop = False
 
     def main(self):
         self.status['full_text'] = time.strftime(self.date_format)
 
+    def stop(self):
+        self.should_stop = True
+
     def run(self):
         while True:
-            self.main()
-            time.sleep(self.freq)
+            if self.should_stop is False:
+                self.main()
+                time.sleep(self.freq)
+            else:
+                break
