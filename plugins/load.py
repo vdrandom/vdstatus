@@ -1,21 +1,11 @@
 import os
-import time
-import threading
+import plugins.common
 
 
-class PluginThread(threading.Thread):
+class PluginThread(plugins.common.PluginThreadCommon):
     def __init__(self, section, config, thread_id):
-        threading.Thread.__init__(self)
-        self.threadID = thread_id
-        self.date_format = config.get(section, 'format', fallback='%c')
-        self.status = dict()
-        if config.has_option(section, 'color'):
-            self.status['color'] = config.get(section, 'color')
-        self.freq = config.getint(section, 'freq', fallback=10)
+        super(PluginThread, self).__init__(section, config)
         self.hide_ok = config.getboolean(section, 'hide_ok', fallback=False)
-        self.hide = False
-        self.should_stop = False
-        self.problem_value = config.getint(section, 'problem', fallback=100)
 
     def main(self):
         loads = os.getloadavg()
@@ -27,14 +17,3 @@ class PluginThread(threading.Thread):
             self.status['urgent'] = False
         loads = [str(i) for i in loads]
         self.status['full_text'] = 'LA: ' + ' '.join(loads)
-
-    def stop(self):
-        self.should_stop = True
-
-    def run(self):
-        while True:
-            if self.should_stop is False:
-                self.main()
-                time.sleep(self.freq)
-            else:
-                break

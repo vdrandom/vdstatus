@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 # TODO: handle SIGINT properly
-# TODO: remove code duplication in plugins, probably use a common class?
 # TODO: add documentation / comments
 # TODO: add a dummy plugin to use as a starting point
 # TODO: interactivity support
@@ -51,17 +50,18 @@ class PluginRunner:
 
     def query(self):
         outputs = list()
-        try:
-            for plugin in self.plugins_loaded:
-                if not plugin.hide:
-                    outputs.append(plugin.status)
-            print(self.format_output(outputs), flush=True)
-            time.sleep(self.output_freq)
-        except (KeyboardInterrupt, SystemExit):
-            for plugin in self.plugins_loaded:
-                plugin.stop()
-            sys.exit('stopping threads...')
-        del outputs
+        for plugin in self.plugins_loaded:
+            if not plugin.hide:
+                outputs.append(plugin.status)
+        print(self.format_output(outputs), flush=True)
+
+    def run(self):
+        while True:
+            try:
+                self.query()
+                time.sleep(self.output_freq)
+            except (KeyboardInterrupt, SystemExit):
+                sys.exit()
 
     @staticmethod
     def format_i3wm(inputs):
@@ -80,5 +80,4 @@ if __name__ == '__main__':
     plugin_runner = PluginRunner(args.conf)
     plugin_runner.start()
     time.sleep(0.1)
-    while True:
-        plugin_runner.query()
+    plugin_runner.run()

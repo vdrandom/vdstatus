@@ -1,21 +1,15 @@
 import os
 import random
-import time
-import threading
+import plugins.common
 
 
-class PluginThread(threading.Thread):
+class PluginThread(plugins.common.PluginThreadCommon):
     def __init__(self, section, config, thread_id):
-        threading.Thread.__init__(self)
-        self.threadID = thread_id
+        super(PluginThread, self).__init__(section, config)
         self.hosts = config.get(section, 'hosts').split(',')
         self.title = config.get(section, 'title')
         self.timeout = config.get(section, 'timeout', fallback='150')
-        self.status = dict()
-        self.freq = config.getint(section, 'freq', fallback=5)
         self.format_status('n/a')
-        self.hide = False
-        self.should_stop = False
 
     def format_status(self, state):
         self.status['full_text'] = self.title + ': ' + state
@@ -34,21 +28,3 @@ class PluginThread(threading.Thread):
                 self.format_status('on')
                 break
             self.format_status('off')
-
-    def sleep(self):
-        seconds = 0
-        while seconds < self.freq:
-            time.sleep(1)
-            seconds += 1
-        del seconds
-
-    def stop(self):
-        self.should_stop = True
-
-    def run(self):
-        while True:
-            if self.should_stop is False:
-                self.main()
-                self.sleep()
-            else:
-                break
