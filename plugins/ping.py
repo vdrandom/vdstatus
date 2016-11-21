@@ -4,7 +4,7 @@ import plugins.common
 
 
 class PluginThread(plugins.common.PluginThreadCommon):
-    def __init__(self, section, config, thread_id):
+    def __init__(self, section, config):
         super(PluginThread, self).__init__(section, config)
         self.hosts = config.get(section, 'hosts').split(',')
         self.title = config.get(section, 'title')

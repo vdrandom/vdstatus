@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 # TODO: handle SIGINT properly
 # TODO: add documentation / comments
-# TODO: add a dummy plugin to use as a starting point
 # TODO: interactivity support
 import argparse
 import configparser
@@ -36,9 +35,8 @@ class PluginRunner:
         self.format_output = self.format_term
         for section in self.config.sections():
             plugin_name = self.config.get(section, 'plugin')
-            plugin_id = len(self.plugins_loaded)
             module = importlib.import_module('.' + plugin_name, 'plugins')
-            thread_object = module.PluginThread(section, self.config, plugin_id)
+            thread_object = module.PluginThread(section, self.config)
             self.plugins_loaded.append(thread_object)
 
     def start(self):

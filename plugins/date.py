@@ -3,7 +3,7 @@ import plugins.common
 
 
 class PluginThread(plugins.common.PluginThreadCommon):
-    def __init__(self, section, config, thread_id):
+    def __init__(self, section, config):
         super(PluginThread, self).__init__(section, config)
         self.date_format = config.get(section, 'format', fallback='%c')
 
