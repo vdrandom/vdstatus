@@ -1,9 +1,9 @@
 import os
 import random
-import plugins.common
+import plugins
 
 
-class PluginThread(plugins.common.PluginThreadCommon):
+class PluginThread(plugins.PluginThreadCommon):
     def __init__(self, section, config):
         super(PluginThread, self).__init__(section, config)
         self.hosts = config.get(section, 'hosts').split(',')

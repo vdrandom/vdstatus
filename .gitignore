@@ -1,3 +1,5 @@
-__pycache__
 *.iml
+*.swp
+*.wpu
 .idea
+__pycache__
