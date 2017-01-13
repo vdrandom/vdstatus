@@ -12,8 +12,10 @@ class PluginThread(plugins.PluginThreadCommon):
         self.status['full_text'] = 'UPD: ' + str(count)
         if count > 0:
             self.hide = False
+            self.status['urgent'] = True
         else:
             self.hide = True
+            self.status['urgent'] = False
 
     def main(self):
         updates = subprocess.getoutput('/usr/bin/pacman -Sup').count("\n")
