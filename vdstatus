@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# TODO: handle SIGINT properly
+# TODO: consider per plugin hide_ok overriding global, not the other way around
 # TODO: add documentation / comments
 # TODO: interactivity support
 import argparse
@@ -30,6 +30,7 @@ class PluginRunner:
         self.config.read(config_file)
         self.output_format = self.config.get('main', 'format', fallback='term')
         self.output_freq = self.config.getint('main', 'output_freq', fallback=1)
+        self.hide_ok = self.config.getboolean('main', 'hide_ok', fallback=True)
         self.plugins_loaded = list()
         self.config.remove_section('main')
         self.format_output = self.format_term
@@ -49,7 +50,7 @@ class PluginRunner:
     def query(self):
         outputs = list()
         for plugin in self.plugins_loaded:
-            if not plugin.hide:
+            if not self.hide_ok or not plugin.hide_ok or not plugin.hide:
                 outputs.append(plugin.status)
         print(self.format_output(outputs), flush=True)
 

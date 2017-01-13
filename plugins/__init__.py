@@ -10,6 +10,7 @@ class PluginThreadCommon:
         self.thread.daemon = True
         self.freq = config.getint(section, 'freq', fallback=1)
         self.problem_value = config.getint(section, 'problem', fallback=70)
+        self.hide_ok = config.getboolean(section, 'hide_ok', fallback=True)
         if config.has_option(section, 'color'):
             self.status['color'] = config.get(section, 'color')
 
