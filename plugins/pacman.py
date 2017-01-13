@@ -5,7 +5,7 @@ import subprocess
 class PluginThread(plugins.PluginThreadCommon):
     def __init__(self, section, config):
         super(PluginThread, self).__init__(section, config)
-        self.freq = config.getint(section, 'freq', fallback=180)
+        self.freq = config.getint(section, 'freq', fallback=15)
         self.format_status(0)
 
     def format_status(self, count):
@@ -18,5 +18,5 @@ class PluginThread(plugins.PluginThreadCommon):
             self.status['urgent'] = False
 
     def main(self):
-        updates = subprocess.getoutput('/usr/bin/pacman -Sup').count("\n")
+        updates = subprocess.getoutput('/usr/bin/pacman -Qu').count("\n")
         self.format_status(updates)
