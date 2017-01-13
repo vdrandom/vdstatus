@@ -18,5 +18,6 @@ class PluginThread(plugins.PluginThreadCommon):
             self.status['urgent'] = False
 
     def main(self):
-        updates = subprocess.getoutput('/usr/bin/pacman -Qu').count("\n")
+        # TODO: this is an ugly hack, fix it with subprocess.Popen asap
+        updates = subprocess.getoutput('/usr/bin/pacman -Qu').count(" -> ")
         self.format_status(updates)
