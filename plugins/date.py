@@ -3,16 +3,14 @@ import plugins
 
 
 class PluginThread(plugins.PluginThreadCommon):
-    def __init__(self, section, config):
-        super(PluginThread, self).__init__(section, config)
-        self.date_format = config.get(section, 'format', fallback='%c')
-        tz = config.get(section, 'TZ', fallback=None)
-        if tz:
+    def __init__(self, config):
+        defaults = {'format': '%c', 'tz': None}
+        super(PluginThread, self).__init__(config, defaults)
+        self.timezone = None
+        if self.conf['tz']:
             import pytz
-            self.tz = pytz.timezone(tz)
-        else:
-            self.tz = None
+            self.timezone = pytz.timezone(self.conf['tz'])
 
     def main(self):
-        now = datetime.datetime.now(tz=self.tz)
-        self.status['full_text'] = now.strftime(self.date_format)
+        now = datetime.datetime.now(tz=self.timezone)
+        self.status['full_text'] = now.strftime(self.conf['format'])

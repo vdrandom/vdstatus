@@ -5,11 +5,12 @@ BATTERY_DIR = '/sys/class/power_supply/BAT0/'
 
 
 class PluginThread(plugins.PluginThreadCommon):
-    def __init__(self, section, config):
-        super(PluginThread, self).__init__(section, config)
+    def __init__(self, config):
+        super(PluginThread, self).__init__(config)
 
     def main(self):
-        with open(BATTERY_DIR + 'capacity', 'r') as capacity, \
+        with \
+                open(BATTERY_DIR + 'capacity', 'r') as capacity, \
                 open(BATTERY_DIR + 'status', 'r') as status:
             batt_stat = status.read().strip()
             batt_capacity = capacity.read().strip()

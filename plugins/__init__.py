@@ -2,17 +2,24 @@ import threading
 import time
 
 
+def parse_config(config, defaults):
+    result = dict()
+    for key in defaults:
+        result[key] = config[key] if key in config else defaults[key]
+    return result
+
+
 class PluginThreadCommon:
-    def __init__(self, section, config):
+    def __init__(self, config, defaults=dict()):
+        if 'freq' not in defaults:
+            defaults['freq'] = 1
+        if 'hide_ok' not in defaults:
+            defaults['hide_ok'] = True
+        self.conf = parse_config(config, defaults)
         self.status = dict()
         self.hide = False
         self.thread = threading.Thread(target=self.run)
         self.thread.daemon = True
-        self.freq = config.getint(section, 'freq', fallback=1)
-        self.problem_value = config.getint(section, 'problem', fallback=70)
-        self.hide_ok = config.getboolean(section, 'hide_ok', fallback=True)
-        if config.has_option(section, 'color'):
-            self.status['color'] = config.get(section, 'color')
 
     def start(self):
         self.thread.start()
@@ -23,4 +30,4 @@ class PluginThreadCommon:
     def run(self):
         while True:
             self.main()
-            time.sleep(self.freq)
+            time.sleep(self.conf['freq'])

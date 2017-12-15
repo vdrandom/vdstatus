@@ -3,7 +3,6 @@
 # TODO: add documentation / comments
 # TODO: interactivity support
 import argparse
-import configparser
 import importlib
 import json
 import os
@@ -12,7 +11,7 @@ import time
 import plugins
 
 
-DEFAULT_CONFIG = os.path.join(os.environ['HOME'], '.config/vdstatus/conf.ini')
+DEFAULT_CONFIG = os.path.join(os.environ['HOME'], '.config/vdstatus/conf.json')
 
 
 def parse_arguments(arguments=sys.argv[1:]):
@@ -26,22 +25,25 @@ def parse_arguments(arguments=sys.argv[1:]):
 
 class PluginRunner:
     def __init__(self, config_file=DEFAULT_CONFIG):
-        self.config = configparser.ConfigParser()
-        self.config.read(config_file)
-        self.output_format = self.config.get('main', 'format', fallback='term')
-        self.output_freq = self.config.getint('main', 'output_freq', fallback=1)
-        self.hide_ok = self.config.getboolean('main', 'hide_ok', fallback=True)
+        defaults = {
+            'output_format': 'term',
+            'output_freq': 1,
+            'hide_ok': True,
+            'plugins': [{'name': 'date'}]
+        }
+        config = dict()
+        with open(config_file) as config_data:
+            config = json.load(config_data)
+        self.conf = plugins.parse_config(config, defaults)
         self.plugins_loaded = list()
-        self.config.remove_section('main')
         self.format_output = self.format_term
-        for section in self.config.sections():
-            plugin_name = self.config.get(section, 'plugin')
-            mod = importlib.import_module('.' + plugin_name, 'plugins')
-            thread_object = mod.PluginThread(section, self.config)
+        for plugin in self.conf['plugins']:
+            mod = importlib.import_module('.' + plugin['name'], 'plugins')
+            thread_object = mod.PluginThread(plugin)
             self.plugins_loaded.append(thread_object)
 
     def start(self):
-        if self.output_format == 'i3':
+        if self.conf['output_format'] == 'i3':
             print('{"version":1}\n[', flush=True)
             self.format_output = self.format_i3wm
         for plugin in self.plugins_loaded:
@@ -50,7 +52,10 @@ class PluginRunner:
     def query(self):
         outputs = list()
         for plugin in self.plugins_loaded:
-            if not self.hide_ok or not plugin.hide_ok or not plugin.hide:
+            if \
+               not self.conf['hide_ok'] or \
+               not plugin.conf['hide_ok'] or \
+               not plugin.hide:
                 outputs.append(plugin.status)
         print(self.format_output(outputs), flush=True)
 
@@ -58,7 +63,7 @@ class PluginRunner:
         while True:
             try:
                 self.query()
-                time.sleep(self.output_freq)
+                time.sleep(self.conf['output_freq'])
             except (KeyboardInterrupt, SystemExit):
                 sys.exit()
 

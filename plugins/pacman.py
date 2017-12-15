@@ -3,9 +3,9 @@ import subprocess
 
 
 class PluginThread(plugins.PluginThreadCommon):
-    def __init__(self, section, config):
-        super(PluginThread, self).__init__(section, config)
-        self.freq = config.getint(section, 'freq', fallback=15)
+    def __init__(self, config):
+        defaults = {'freq': 15}
+        super(PluginThread, self).__init__(config, defaults)
         self.format_status(0)
 
     def format_status(self, count):

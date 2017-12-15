@@ -3,12 +3,13 @@ import plugins
 
 
 class PluginThread(plugins.PluginThreadCommon):
-    def __init__(self, section, config):
-        super(PluginThread, self).__init__(section, config)
+    def __init__(self, config):
+        defaults = {'problem': 1}
+        super(PluginThread, self).__init__(config, defaults)
 
     def main(self):
         loads = os.getloadavg()
-        if loads[0] >= self.problem_value:
+        if loads[0] >= self.conf['problem']:
             self.hide = False
             self.status['urgent'] = True
         else:
