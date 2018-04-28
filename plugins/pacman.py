@@ -4,18 +4,17 @@ import subprocess
 
 class PluginThread(plugins.PluginThreadCommon):
     def __init__(self, config):
-        defaults = {'freq': 15}
+        defaults = {
+            'freq': 15,
+            'problem': 10
+        }
         super(PluginThread, self).__init__(config, defaults)
         self.format_status(0)
 
     def format_status(self, count):
         self.status['full_text'] = 'UPD: ' + str(count)
-        if count > 0:
-            self.hide = False
-            self.status['urgent'] = True
-        else:
-            self.hide = True
-            self.status['urgent'] = False
+        self.hide = count == 0
+        self.status['urgent'] = count >= self.conf['problem']
 
     def main(self):
         # TODO: this is an ugly hack, fix it with subprocess.Popen asap
