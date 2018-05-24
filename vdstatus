@@ -14,13 +14,13 @@ import plugins
 DEFAULT_CONFIG = os.path.join(os.environ['HOME'], '.config/vdstatus/conf.json')
 
 
-def parse_arguments(arguments=sys.argv[1:]):
+def parse_arguments():
     desc = ('A simple i3status replacement, '
             'and more. Warning: WIP, may be broken.')
-    p = argparse.ArgumentParser(description=desc)
-    p.add_argument('-c', '--conf', default=DEFAULT_CONFIG,
-                   help='configuration file')
-    return p.parse_args(arguments)
+    parser = argparse.ArgumentParser(description=desc)
+    parser.add_argument('-c', '--conf', default=DEFAULT_CONFIG,
+                        help='configuration file')
+    return parser.parse_args()
 
 
 class PluginRunner:
