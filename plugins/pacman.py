@@ -17,6 +17,6 @@ class PluginThread(plugins.PluginThreadCommon):
         self.status['urgent'] = count >= self.conf['problem']
 
     def main(self):
-        # TODO: this is an ugly hack, fix it with subprocess.Popen asap
+        # TODO: this is an ugly hack, fix it with subprocess.Popen someday
         updates = subprocess.getoutput('/usr/bin/pacman -Qu').count(" -> ")
         self.format_status(updates)
