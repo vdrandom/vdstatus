@@ -16,13 +16,13 @@ class PluginThread(plugins.PluginThreadCommon):
         try:
             req = requests.get(URI, timeout=2)
             advice = req.json()['text'] if req.status_code == 200 else 'N/A'
-            self.retry = True
+            self.retry = False
         except requests.exceptions.Timeout:
             advice = 'N/A (timeout)'
-            self.retry = False
+            self.retry = True
         except requests.exceptions.ConnectionError:
             advice = 'N/A (offline)'
-            self.retry = False
+            self.retry = True
         self.status['full_text'] = advice
 
 
