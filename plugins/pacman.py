@@ -9,14 +9,21 @@ class PluginThread(plugins.PluginThreadCommon):
             'problem': 10
         }
         super(PluginThread, self).__init__(config, defaults)
-        self.format_status(0)
+        self.format_status(list())
 
-    def format_status(self, count):
-        self.status['full_text'] = 'UPD: ' + str(count)
+    def format_status(self, updates):
+        count = int()
+        for update in updates:
+            if not '[ignored]' in update:
+                count += 1
         self.hide = count == 0
         self.status['urgent'] = count >= self.conf['problem']
+        self.status['full_text'] = 'UPD: ' + str(count)
 
     def main(self):
-        # TODO: this is an ugly hack, fix it with subprocess.Popen someday
-        updates = subprocess.getoutput('/usr/bin/pacman -Qu').count(" -> ")
-        self.format_status(updates)
+        pacman_qu = subprocess.Popen(
+            ('/usr/bin/pacman', '-Qu'), stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL
+        )
+        out = str(pacman_qu.communicate()[0])
+        self.format_status(out.splitlines())
