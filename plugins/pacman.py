@@ -9,13 +9,9 @@ class PluginThread(plugins.PluginThreadCommon):
             'problem': 10
         }
         super(PluginThread, self).__init__(config, defaults)
-        self.format_status(list())
+        self.format_status(0)
 
-    def format_status(self, updates):
-        count = int()
-        for update in updates:
-            if not '[ignored]' in update:
-                count += 1
+    def format_status(self, count):
         self.hide = count == 0
         self.status['urgent'] = count >= self.conf['problem']
         self.status['full_text'] = 'UPD: ' + str(count)
@@ -25,5 +21,6 @@ class PluginThread(plugins.PluginThreadCommon):
             ('/usr/bin/pacman', '-Qu'), stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL
         )
-        out = str(pacman_qu.communicate()[0])
-        self.format_status(out.splitlines())
+        out = pacman_qu.communicate()[0].strip().splitlines()
+        packages = [pkg for pkg in out if not '[ignored]' in pkg]
+        self.format_status(len(packages))
