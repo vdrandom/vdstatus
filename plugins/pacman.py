@@ -19,7 +19,8 @@ class PluginThread(plugins.PluginThreadCommon):
     def main(self):
         pacman_qu = subprocess.Popen(
             ('/usr/bin/pacman', '-Qu'), stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL
+            stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL,
+            encoding='UTF-8'
         )
         out = pacman_qu.communicate()[0].strip().splitlines()
         packages = [pkg for pkg in out if not '[ignored]' in pkg]
