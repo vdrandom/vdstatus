@@ -4,7 +4,7 @@ import psutil
 
 class PluginThread(plugins.PluginThreadCommon):
     def __init__(self, config):
-        defaults = {'partition': '/', 'problem': 80}
+        defaults = {'partition': '/', 'problem': 80, 'freq': 15}
         super(PluginThread, self).__init__(config, defaults)
 
     def main(self):
