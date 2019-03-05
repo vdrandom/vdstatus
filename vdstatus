@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# pylint: disable=C0111
 # TODO: consider per plugin hide_ok overriding global, not the other way around
 # TODO: add documentation / comments
 # TODO: interactivity support
@@ -8,10 +9,11 @@ import json
 import os
 import sys
 import time
+import yaml
 import plugins
 
 
-DEFAULT_CONFIG = os.path.join(os.environ['HOME'], '.config/vdstatus/conf.json')
+DEFAULT_CONFIG = os.path.join(os.environ['HOME'], '.config/vdstatus/conf.yaml')
 
 
 def parse_arguments():
@@ -33,7 +35,7 @@ class PluginRunner:
         }
         config = dict()
         with open(config_file) as config_data:
-            config = json.load(config_data)
+            config = yaml.load(config_data)
         self.conf = plugins.parse_config(config, defaults)
         self.plugins_loaded = list()
         self.format_output = self.format_term
@@ -79,9 +81,13 @@ class PluginRunner:
         return ' \033[1m|\033[0m '.join(return_info)
 
 
-if __name__ == '__main__':
+def main():
     args = parse_arguments()
     plugin_runner = PluginRunner(args.conf)
     plugin_runner.start()
     time.sleep(0.1)
     plugin_runner.run()
+
+
+if __name__ == '__main__':
+    main()

@@ -1,4 +1,9 @@
 vdstatus
 ========
 
-A status script initially for i3bar. Potentially will support lemonbar. It is on very early stages of development.
+A simple replacement for i3status that is both extensible and customizable.
+Documentation is pending, but no promises.
+
+Requirements:
+* python 3
+* pyyaml

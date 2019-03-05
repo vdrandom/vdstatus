@@ -1,0 +1,20 @@
+output_format: i3
+plugins:
+- name: ping
+  title: NET
+  hosts:
+  - de-ber-as20647.anchors.atlas.ripe.net
+  - nl-ams-as1101.anchors.atlas.ripe.net
+  - uk-boh-as196745.anchors.atlas.ripe.net
+- name: disk
+  partition: /
+  problem: 80
+  hide_ok: false
+- name: disk
+  partition: /home
+  problem: 90
+- name: pacman
+- name: mem
+- name: load
+- name: date
+  format: '%a %d %H:%M'
