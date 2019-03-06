@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# pylint: disable=C0111
 import argparse
 import importlib
 import json
@@ -14,7 +13,6 @@ DEFAULT_CONFIG = os.path.join(os.environ['HOME'], '.config/vdstatus/conf.yaml')
 DEFAULTS = {
     'output_format': 'term',
     'output_freq': 1,
-    'hide_ok': False,
     'plugins': [{'name': 'date'}]
 }
 
@@ -52,7 +50,6 @@ class PluginRunner:
         outputs = list()
         for plugin in self.plugins_loaded:
             if \
-               not self.conf['hide_ok'] or \
                not plugin.conf['hide_ok'] or \
                not plugin.hide:
                 outputs.append(plugin.status)
