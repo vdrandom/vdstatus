@@ -1,4 +1,3 @@
-# TODO: tidy up the fucking code
 import plugins
 import requests
 import time
