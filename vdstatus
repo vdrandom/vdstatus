@@ -65,7 +65,7 @@ class PluginRunner:
 
     @staticmethod
     def format_i3wm(inputs):
-        return json.dumps(inputs) + ','
+        return json.dumps(inputs, ensure_ascii=False) + ','
 
     @staticmethod
     def format_term(inputs):
