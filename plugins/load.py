@@ -15,5 +15,4 @@ class PluginThread(plugins.PluginThreadCommon):
         else:
             self.hide = True
             self.status['urgent'] = False
-        loads = ['{:.2f}'.format(i) for i in loads]
-        self.status['full_text'] = 'LA: ' + ' '.join(loads)
+        self.status['full_text'] = 'LA: {:.2f} {:.2f} {:.2f}'.format(*loads)
