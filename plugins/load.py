@@ -4,7 +4,7 @@ import plugins
 
 class PluginThread(plugins.PluginThreadCommon):
     def __init__(self, config):
-        defaults = {'problem': 1}
+        defaults = {'freq': 20, 'problem': 1}
         super(PluginThread, self).__init__(config, defaults)
 
     def main(self):
@@ -15,5 +15,5 @@ class PluginThread(plugins.PluginThreadCommon):
         else:
             self.hide = True
             self.status['urgent'] = False
-        loads = [str(i) for i in loads]
+        loads = ['{:.2f}'.format(i) for i in loads]
         self.status['full_text'] = 'LA: ' + ' '.join(loads)
