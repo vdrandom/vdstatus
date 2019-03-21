@@ -5,6 +5,8 @@ import subprocess
 class PluginThread(plugins.PluginThreadCommon):
     def __init__(self, config):
         defaults = {
+            'cmd': ('/usr/bin/pacman', '-Qu'),
+            'title': 'UPD',
             'freq': 15,
             'problem': 10
         }
@@ -14,11 +16,11 @@ class PluginThread(plugins.PluginThreadCommon):
     def format_status(self, count):
         self.hide = count == 0
         self.status['urgent'] = count >= self.conf['problem']
-        self.status['full_text'] = 'UPD: ' + str(count)
+        self.status['full_text'] = self.conf['title'] + ': ' + str(count)
 
     def main(self):
         pacman_qu = subprocess.Popen(
-            ('/usr/bin/pacman', '-Qu'), stdout=subprocess.PIPE,
+            self.conf['cmd'], stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL,
             encoding='UTF-8'
         )
