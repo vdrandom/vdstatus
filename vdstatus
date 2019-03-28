@@ -6,7 +6,6 @@ import os
 import sys
 import time
 import yaml
-import plugins
 
 
 DEFAULT_CONFIG = os.path.join(os.environ['HOME'], '.config/vdstatus/conf.yaml')
@@ -28,10 +27,10 @@ def parse_arguments():
 
 class PluginRunner:
     def __init__(self, config_file=DEFAULT_CONFIG):
-        config = dict()
+        self.conf = dict()
+        self.conf.update(DEFAULTS)
         with open(config_file) as config_data:
-            config = yaml.load(config_data)
-        self.conf = plugins.parse_config(config, DEFAULTS)
+            self.conf.update(yaml.load(config_data))
         self.plugins_loaded = list()
         self.format_output = self.format_term
         for plugin in self.conf['plugins']:

@@ -2,12 +2,14 @@ import datetime
 import plugins
 
 
+DATE_DEFAULTS = {'format': '%c'}
+
+
 class PluginThread(plugins.PluginThreadCommon):
     def __init__(self, config):
-        defaults = {'format': '%c', 'tz': None}
-        super(PluginThread, self).__init__(config, defaults)
+        super(PluginThread, self).__init__(config, DATE_DEFAULTS)
         self.timezone = None
-        if self.conf['tz']:
+        if 'tz' in self.conf:
             import pytz
             self.timezone = pytz.timezone(self.conf['tz'])
 

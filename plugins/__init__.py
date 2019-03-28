@@ -2,21 +2,17 @@ import threading
 import time
 
 
-def parse_config(config, defaults):
-    result = dict()
-    for key in defaults:
-        result[key] = config[key] if key in config else defaults[key]
-    return result
+PLUGIN_DEFAULTS = {'freq': 1, 'hide_ok': True}
 
 
 class PluginThreadCommon:
-    def __init__(self, config, defaults=dict()):
-        if 'freq' not in defaults:
-            defaults['freq'] = 1
-        if 'hide_ok' not in defaults:
-            defaults['hide_ok'] = True
-        self.conf = parse_config(config, defaults)
+    def __init__(self, config, defaults=None):
         self.status = dict()
+        self.conf = dict()
+        self.conf.update(PLUGIN_DEFAULTS)
+        if defaults:
+            self.conf.update(defaults)
+        self.conf.update(config)
         self.hide = False
         self.thread = threading.Thread(target=self.run)
         self.thread.daemon = True

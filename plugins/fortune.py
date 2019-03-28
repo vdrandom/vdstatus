@@ -3,17 +3,20 @@ import requests
 import time
 
 
-URI = 'http://fucking-great-advice.ru/api/random'
+FGA_DEFAULTS = {
+    'uri': 'http://fucking-great-advice.ru/api/random',
+    'freq': 120, 'retry': 3
+}
+
+
 class PluginThread(plugins.PluginThreadCommon):
     def __init__(self, config):
-        defaults = {'freq': 120, 'retry': 3}
-        super(PluginThread, self).__init__(config, defaults)
+        super(PluginThread, self).__init__(config, FGA_DEFAULTS)
         self.retry = False
-
 
     def main(self):
         try:
-            req = requests.get(URI, timeout=2)
+            req = requests.get(self.conf['uri'], timeout=2)
             advice = req.json()['text'] if req.status_code == 200 else 'N/A'
             self.retry = False
         except requests.exceptions.Timeout:
@@ -23,7 +26,6 @@ class PluginThread(plugins.PluginThreadCommon):
             advice = 'N/A (offline)'
             self.retry = True
         self.status['full_text'] = advice
-
 
     def run(self):
         while True:

@@ -2,15 +2,15 @@ import plugins
 import subprocess
 
 
+PACMAN_DEFAULTS = {
+    'cmd': ('/usr/bin/pacman', '-Qu'),
+    'title': 'UPD', 'freq': 15, 'problem': 10
+}
+
+
 class PluginThread(plugins.PluginThreadCommon):
     def __init__(self, config):
-        defaults = {
-            'cmd': ('/usr/bin/pacman', '-Qu'),
-            'title': 'UPD',
-            'freq': 15,
-            'problem': 10
-        }
-        super(PluginThread, self).__init__(config, defaults)
+        super(PluginThread, self).__init__(config, PACMAN_DEFAULTS)
         self.format_status(0)
 
     def format_status(self, count):

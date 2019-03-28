@@ -2,16 +2,16 @@ import plugins
 
 
 BATTERY_DIR = '/sys/class/power_supply/BAT0/'
+BATT_DEFAULTS = {
+    'problem': 15,
+    'symbol_charging': '\u2191',
+    'symbol_discharging': '\u2193'
+}
 
 
 class PluginThread(plugins.PluginThreadCommon):
     def __init__(self, config):
-        defaults = {
-            'problem': 15,
-            'symbol_charging': '\u2191',
-            'symbol_discharging': '\u2193'
-        }
-        super(PluginThread, self).__init__(config, defaults)
+        super(PluginThread, self).__init__(config, BATT_DEFAULTS)
 
     def main(self):
         with \

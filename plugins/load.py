@@ -2,10 +2,12 @@ import os
 import plugins
 
 
+LOAD_DEFAULTS = {'freq': 20, 'problem': 1}
+
+
 class PluginThread(plugins.PluginThreadCommon):
     def __init__(self, config):
-        defaults = {'freq': 20, 'problem': 1}
-        super(PluginThread, self).__init__(config, defaults)
+        super(PluginThread, self).__init__(config, LOAD_DEFAULTS)
 
     def main(self):
         loads = os.getloadavg()

@@ -2,10 +2,12 @@ import plugins
 import psutil
 
 
+DISK_DEFAULTS = {'partition': '/', 'problem': 80, 'freq': 15}
+
+
 class PluginThread(plugins.PluginThreadCommon):
     def __init__(self, config):
-        defaults = {'partition': '/', 'problem': 80, 'freq': 15}
-        super(PluginThread, self).__init__(config, defaults)
+        super(PluginThread, self).__init__(config, DISK_DEFAULTS)
 
     def main(self):
         du_stat = psutil.disk_usage(self.conf['partition'])

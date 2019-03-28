@@ -3,15 +3,19 @@ import random
 import plugins
 
 
+PING_DEFAULTS = {
+    'hosts': list(), 'title': 'PING', 'timeout': 150
+}
+
+
 class PluginThread(plugins.PluginThreadCommon):
     def __init__(self, config):
-        defaults = {'hosts': list(), 'title': 'PING', 'timeout': 150}
-        super(PluginThread, self).__init__(config, defaults)
+        super(PluginThread, self).__init__(config, PING_DEFAULTS)
         self.format_status('n/a')
 
     def format_status(self, state):
         self.status['full_text'] = self.conf['title'] + ': ' + state
-        if state == 'on':
+        if state == 'up':
             self.status['urgent'] = False
             self.hide = True
         else:
@@ -26,4 +30,4 @@ class PluginThread(plugins.PluginThreadCommon):
             if response == 0:
                 self.format_status('on')
                 break
-            self.format_status('off')
+            self.format_status('down')

@@ -2,10 +2,12 @@ import psutil
 import plugins
 
 
+MEM_DEFAULTS = {'problem': 85}
+
+
 class PluginThread(plugins.PluginThreadCommon):
     def __init__(self, config):
-        defaults = {'problem': 85}
-        super(PluginThread, self).__init__(config, defaults)
+        super(PluginThread, self).__init__(config, MEM_DEFAULTS)
 
     def main(self):
         mem_stat = psutil.virtual_memory()
