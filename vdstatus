@@ -30,7 +30,7 @@ class PluginRunner:
         self.conf = dict()
         self.conf.update(DEFAULTS)
         with open(config_file) as config_data:
-            self.conf.update(yaml.load(config_data))
+            self.conf.update(yaml.safe_load(config_data))
         self.plugins_loaded = list()
         self.format_output = self.format_term
         for plugin in self.conf['plugins']:
