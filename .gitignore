@@ -1,3 +1,4 @@
+plugins/custom*.py
 *.iml
 *.swp
 *.wpr
