@@ -2,7 +2,7 @@ import os
 import plugins
 
 
-LOAD_DEFAULTS = {'freq': 20, 'problem': 1}
+LOAD_DEFAULTS = {'title': 'LA', 'freq': 20, 'problem': 1}
 
 
 class PluginThread(plugins.PluginThreadCommon):
@@ -13,8 +13,9 @@ class PluginThread(plugins.PluginThreadCommon):
         loads = os.getloadavg()
         if loads[0] >= self.conf['problem']:
             self.hide = False
-            self.status['urgent'] = True
+            urgent = True
         else:
             self.hide = True
-            self.status['urgent'] = False
-        self.status['full_text'] = 'LA: {:.2f} {:.2f} {:.2f}'.format(*loads)
+            urgent = False
+        status = '{:.2f} {:.2f} {:.2f}'.format(*loads)
+        self.format_status(status, urgent=urgent)

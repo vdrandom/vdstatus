@@ -49,8 +49,9 @@ class PluginRunner:
         outputs = list()
         for plugin in self.plugins_loaded:
             if \
-               not plugin.conf['hide_ok'] or \
-               not plugin.hide:
+                    'full_text' in plugin.status and (
+                            not plugin.conf['hide_ok'] or not plugin.hide
+                    ):
                 outputs.append(plugin.status)
         print(self.format_output(outputs), flush=True)
 

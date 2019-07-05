@@ -1,4 +1,12 @@
+# Typical plugin properties:
+# - name:    plugin name (always required, all other properties are optional)
+# - title:   title representation on the panel
+# - hide_ok: false to force display value even if it is below problem threshold
+# - problem: a threshold value to make a value urgent and / or display
+#            the value on the panel
+
 output_format: i3
+
 plugins:
 - name: ping
   title: NET
@@ -6,15 +14,22 @@ plugins:
   - de-ber-as20647.anchors.atlas.ripe.net
   - nl-ams-as1101.anchors.atlas.ripe.net
   - uk-boh-as196745.anchors.atlas.ripe.net
+  hide_ok: false
+
 - name: disk
   partition: /
   problem: 80
   hide_ok: false
+
 - name: disk
   partition: /home
   problem: 90
+
 - name: pacman
+
 - name: mem
+
 - name: load
+
 - name: date
   format: '%a %d %H:%M'

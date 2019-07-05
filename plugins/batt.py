@@ -17,13 +17,14 @@ class PluginThread(plugins.PluginThreadCommon):
         with \
                 open(BATTERY_DIR + 'capacity', 'r') as batt_capacity, \
                 open(BATTERY_DIR + 'status', 'r') as batt_status:
-            status = batt_status.read().strip()
-            capacity = batt_capacity.read().strip()
-        if status != 'Discharging':
+            capacity = batt_capacity.readline().strip()
+            status_value = batt_status.readline().strip()
+
+        if status_value != 'Discharging':
             symbol = self.conf['symbol_charging']
-            self.status['urgent'] = False
+            urgent = False
         else:
             symbol = self.conf['symbol_discharging']
-            self.status['urgent'] = float(capacity) <= self.conf['problem']
+            urgent = float(capacity) <= self.conf['problem']
 
-        self.status['full_text'] = 'BAT: ' + capacity + '% ' + symbol
+        self.format_status(capacity + '% ' + symbol, urgent=urgent)

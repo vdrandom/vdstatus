@@ -15,4 +15,4 @@ class PluginThread(plugins.PluginThreadCommon):
 
     def main(self):
         now = datetime.datetime.now(tz=self.timezone)
-        self.status['full_text'] = now.strftime(self.conf['format'])
+        self.format_status(now.strftime(self.conf['format']))

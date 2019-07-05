@@ -13,10 +13,6 @@ class PluginThread(plugins.PluginThreadCommon):
         self.hide = False
         self.format_status(self.conf['title'], False)
 
-    def format_status(self, contents, urgent):
-        self.status['urgent'] = urgent
-        self.status['full_text'] = self.conf['title'] + ': ' + contents
-
     def main(self):
         try:
             with open(self.conf['filename'], 'r') as datafile:

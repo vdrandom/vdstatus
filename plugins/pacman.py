@@ -11,12 +11,6 @@ PACMAN_DEFAULTS = {
 class PluginThread(plugins.PluginThreadCommon):
     def __init__(self, config):
         super(PluginThread, self).__init__(config, PACMAN_DEFAULTS)
-        self.format_status(0)
-
-    def format_status(self, count):
-        self.hide = count == 0
-        self.status['urgent'] = count >= self.conf['problem']
-        self.status['full_text'] = self.conf['title'] + ': ' + str(count)
 
     def main(self):
         pacman_qu = subprocess.Popen(
@@ -25,5 +19,11 @@ class PluginThread(plugins.PluginThreadCommon):
             encoding='UTF-8'
         )
         out = pacman_qu.communicate()[0].strip().splitlines()
-        packages = [pkg for pkg in out if not '[ignored]' in pkg]
-        self.format_status(len(packages))
+        packages = len([pkg for pkg in out if not '[ignored]' in pkg])
+        if packages:
+            self.hide = False
+        else:
+            self.hide = True
+        self.format_status(
+            str(packages), urgent=packages >= self.conf['problem']
+        )
