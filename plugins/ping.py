@@ -23,4 +23,4 @@ class PluginThread(plugins.PluginThreadCommon):
         if fping.returncode == 0:
             self.format_status('up')
         else:
-            self.format_status('down', urgent=True)
+            self.format_status('down', True)

@@ -11,7 +11,6 @@ class PluginThread(plugins.PluginThreadCommon):
     def __init__(self, config):
         super(PluginThread, self).__init__(config, FILECAT_DEFAULTS)
         self.hide = False
-        self.format_status(self.conf['title'], False)
 
     def main(self):
         try:
@@ -21,4 +20,5 @@ class PluginThread(plugins.PluginThreadCommon):
         except FileNotFoundError:
             contents = self.conf['nofile']
             urgent = True
+
         self.format_status(contents, urgent)

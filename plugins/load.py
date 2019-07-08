@@ -18,4 +18,5 @@ class PluginThread(plugins.PluginThreadCommon):
             self.hide = True
             urgent = False
         status = '{:.2f} {:.2f} {:.2f}'.format(*loads)
-        self.format_status(status, urgent=urgent)
+
+        self.format_status(status, urgent)

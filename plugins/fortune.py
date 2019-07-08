@@ -25,6 +25,7 @@ class PluginThread(plugins.PluginThreadCommon):
         except requests.exceptions.ConnectionError:
             fortune = 'N/A (offline)'
             self.retry = True
+
         self.format_status(fortune)
 
     def run(self):

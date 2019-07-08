@@ -24,6 +24,6 @@ class PluginThread(plugins.PluginThreadCommon):
             self.hide = False
         else:
             self.hide = True
-        self.format_status(
-            str(packages), urgent=packages >= self.conf['problem']
-        )
+
+        urgent = packages >= self.conf['problem']
+        self.format_status(packages, urgent)

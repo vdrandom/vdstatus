@@ -14,5 +14,7 @@ class PluginThread(plugins.PluginThreadCommon):
             self.timezone = pytz.timezone(self.conf['tz'])
 
     def main(self):
-        now = datetime.datetime.now(tz=self.timezone)
-        self.format_status(now.strftime(self.conf['format']))
+        now = datetime.datetime\
+                               .now(tz=self.timezone)\
+                               .strftime(self.conf['format'])
+        self.format_status(now)

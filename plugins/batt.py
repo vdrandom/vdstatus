@@ -1,7 +1,6 @@
 import plugins
 
 
-BATTERY_DIR = '/sys/class/power_supply/BAT0/'
 BATT_DEFAULTS = {
     'problem': 15,
     'symbol_charging': '\u2191',
@@ -15,10 +14,10 @@ class PluginThread(plugins.PluginThreadCommon):
 
     def main(self):
         with \
-                open(BATTERY_DIR + 'capacity', 'r') as batt_capacity, \
-                open(BATTERY_DIR + 'status', 'r') as batt_status:
-            capacity = batt_capacity.readline().strip()
-            status_value = batt_status.readline().strip()
+                open('/sys/class/power_supply/BAT0/capacity', 'r') as bcap, \
+                open('/sys/class/power_supply/BAT0/status', 'r') as bstat:
+            capacity = bcap.readline().strip()
+            status_value = bstat.readline().strip()
 
         if status_value != 'Discharging':
             symbol = self.conf['symbol_charging']
@@ -27,4 +26,5 @@ class PluginThread(plugins.PluginThreadCommon):
             symbol = self.conf['symbol_discharging']
             urgent = float(capacity) <= self.conf['problem']
 
-        self.format_status(capacity + '% ' + symbol, urgent=urgent)
+        status = '{}% {}'.format(capacity, symbol)
+        self.format_status(status, urgent)

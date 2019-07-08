@@ -19,7 +19,7 @@ class PluginThreadCommon:
 
     def format_status(self, status, urgent=False):
         if 'title' in self.conf:
-            full_text = self.conf['title'] + ': ' + status
+            full_text = '{}: {}'.format(self.conf['title'], status)
         else:
             full_text = status
         self.status.update({'full_text': full_text, 'urgent': urgent})

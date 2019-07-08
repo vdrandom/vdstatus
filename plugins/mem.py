@@ -17,5 +17,6 @@ class PluginThread(plugins.PluginThreadCommon):
         else:
             self.hide = True
             urgent = False
-        mem_available = round(mem_stat.available / 2**30, 2)
-        self.format_status('{:.2f}G'.format(mem_available), urgent)
+
+        status = '{:.2f}G'.format(mem_stat.available / 2**30)
+        self.format_status(status, urgent)

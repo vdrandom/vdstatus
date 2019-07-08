@@ -19,5 +19,6 @@ class PluginThread(plugins.PluginThreadCommon):
         else:
             self.hide = True
             self.status['urgent'] = False
+
         status = '{:.2f}G'.format(du_stat.free / 2**30)
         self.format_status(status)
