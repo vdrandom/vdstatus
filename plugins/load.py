@@ -2,7 +2,7 @@ import os
 import plugins
 
 
-LOAD_DEFAULTS = {'title': 'LA', 'freq': 20, 'problem': 1}
+LOAD_DEFAULTS = {'title': 'LOAD', 'freq': 20, 'problem': 1}
 
 
 class PluginThread(plugins.PluginThreadCommon):

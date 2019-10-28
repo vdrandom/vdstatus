@@ -2,6 +2,7 @@ import plugins
 
 
 BATT_DEFAULTS = {
+    'title': 'BAT',
     'problem': 15,
     'symbol_charging': '\u2191',
     'symbol_discharging': '\u2193'
