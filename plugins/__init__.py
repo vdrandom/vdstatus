@@ -18,7 +18,7 @@ class PluginThreadCommon:
         self.thread.daemon = True
 
     def format_status(self, status, urgent=False):
-        if 'title' in self.conf:
+        if 'title' in self.conf and self.conf['title']:
             full_text = '{}: {}'.format(self.conf['title'], status)
         else:
             full_text = status

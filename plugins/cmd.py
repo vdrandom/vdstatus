@@ -3,8 +3,8 @@ import subprocess
 
 
 PACMAN_DEFAULTS = {
-    'cmd': ('/usr/bin/pacman', '-Qu'),
-    'title': 'UPD', 'freq': 15, 'problem': 10
+    'cmd': ('/usr/bin/echo', 'I am cmd'),
+    'title': 'CMD', 'freq': 15
 }
 
 
@@ -18,12 +18,6 @@ class PluginThread(plugins.PluginThreadCommon):
             stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL,
             encoding='UTF-8'
         )
-        out = pacman_qu.communicate()[0].strip().splitlines()
-        packages = len([pkg for pkg in out if not '[ignored]' in pkg])
-        if packages:
-            self.hide = False
-        else:
-            self.hide = True
+        out = pacman_qu.communicate()[0].strip().splitlines()[0]
 
-        urgent = packages >= self.conf['problem']
-        self.format_status(packages, urgent)
+        self.format_status(out)
