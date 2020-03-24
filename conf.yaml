@@ -1,5 +1,7 @@
 # Typical plugin properties:
 # - name:    plugin name (always required, all other properties are optional)
+#            note that a plugin can be used more than once (i.e. different
+#            timezones in the date plugin)
 # - title:   title representation on the panel
 # - hide_ok: false to force display value even if it is below problem threshold
 # - problem: a threshold value to make a value urgent and / or display
@@ -25,11 +27,16 @@ plugins:
   partition: /home
   problem: 90
 
-- name: pacman
-
 - name: mem
 
 - name: load
 
+- name: batt
+
 - name: date
   format: '%a %d %H:%M'
+
+- name: date
+  title: UTC
+  tz: UTC
+  format: '%H:%M'
